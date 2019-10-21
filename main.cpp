@@ -36,51 +36,46 @@ char getMax(int r, int g, int b) {
 }
 
 void read_i2c(void){
-while(true){
-	// Read data from color sensor (Clear/Red/Green/Blue)
-	
-	char colour_data[8];
-	char clear_reg[1] = {0xB4}; // {?1011 0100?} -> 0x14 and we set 1st and 3rd bit to 1
-
-		//Reads clear value
-        i2c.write(colour_sensor_addr,clear_reg,1, true);
-        i2c.read(colour_sensor_addr,colour_data,8, false);
-        
-		//We store in clear_value the concatenation of clear_data[1] and clear_data[0]
-        int clear_value = ((int)colour_data[1] << 8) | colour_data[0];
-                
-		//We store in red_value the concatenation of red_data[1] and red_data[0]
-        int red_value = ((int)colour_data[3] << 8) | colour_data[2];
-        
-		//We store in green_value the concatenation of green_data[1] and green_data[0]
-        int green_value = ((int)colour_data[5] << 8) | colour_data[4];
-        
-		//We store in blue_value the concatenation of blue_data[1] and blue_data[0]
-        int blue_value = ((int)colour_data[7] << 8) | colour_data[6];
-        
-        // print sensor readings
-        
-        pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n\r", clear_value, red_value, green_value, blue_value);
-        
+	while(true){
+		// Read data from color sensor (Clear/Red/Green/Blue)
+		
+		char colour_data[8];
+		float accel_data[3];
+		
+		
+		char clear_reg[1] = {0xB4}; // {?1011 0100?} -> 0x14 and we set 1st and 3rd bit to 1 for auto-increment
+		//Asking for first register value
+		i2c.write(colour_sensor_addr,clear_reg, 1, true);
+		i2c.read(colour_sensor_addr,colour_data, 8, false);
+					
+		//We store the values read in clear, red, green and blue data
+		int clear_value = ((int)colour_data[1] << 8) | colour_data[0];
+		int red_value = ((int)colour_data[3] << 8) | colour_data[2];
+		int green_value = ((int)colour_data[5] << 8) | colour_data[4];
+		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];
+					
+		// print sensor readings
+		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n\r", clear_value, red_value, green_value, blue_value);
+					
 		//Obtains which one is the greatest - red, green or blue
 		char max = getMax(red_value, green_value, blue_value);
-		
+			
 		//Switchs the color of the greatest value. First, we switch off all of them
-        ledR.write(1);
-        ledG.write(1);
-        ledB.write(1);
-        if (max == 'r'){
-           ledR.write(0);
-           pc.printf("R\r\n");
-        } else if(max == 'g'){
-          pc.printf("G\r\n");
-          ledG.write(0);
-        } else{
-          pc.printf("B\r\n");
-          ledB.write(0);
-        }
-				wait(1.0);
+		ledR.write(1);
+		ledG.write(1);
+		ledB.write(1);
+		if (max == 'r'){
+			 ledR.write(0);
+			 pc.printf("R\r\n");
+		} else if(max == 'g'){
+			pc.printf("G\r\n");
+			ledG.write(0);
+		} else{
+			pc.printf("B\r\n");
+			ledB.write(0);
 			}
+		wait(1.0);
+		}
 }
 void initialize_colour_sensor(){
 	char id_regval[1] = {0x92}; //‭1001 0010‬ (bin)
