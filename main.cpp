@@ -52,7 +52,7 @@ void read_i2c(void){
 		int clear_value = ((int)colour_data[1] << 8) | colour_data[0];
 		int red_value = ((int)colour_data[3] << 8) | colour_data[2];
 		int green_value = ((int)colour_data[5] << 8) | colour_data[4];
-		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];
+		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];hola
 					
 		// print sensor readings
 		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n\r", clear_value, red_value, green_value, blue_value);
