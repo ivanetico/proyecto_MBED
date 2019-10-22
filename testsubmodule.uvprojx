@@ -7103,16 +7103,6 @@
               <FilePath>.\registers_data.h</FilePath>
             </File>
             <File>
-              <FileName>acc_MMA8451Q.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\acc_MMA8451Q.cpp</FilePath>
-            </File>
-            <File>
-              <FileName>colour_TCS34725.cpp</FileName>
-              <FileType>8</FileType>
-              <FilePath>.\colour_TCS34725.cpp</FilePath>
-            </File>
-            <File>
               <FileName>MMA8451Q.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\MMA8451Q.cpp</FilePath>

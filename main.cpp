@@ -1,4 +1,8 @@
 #include "mbed.h"
+#include "MMA8451Q.h"
+
+#define MMA8451_I2C_ADDRESS (0x1d<<1)
+
 // Example program connecting the TCS34725 Color Sensor to the B-L072Z-LRWAN1 using I2C
 
 I2C i2c(I2C_SDA, I2C_SCL); //pins for I2C communication (SDA, SCL)
@@ -19,6 +23,22 @@ DigitalOut green(LED1); //LED of B-L072Z-LRWAN1 board
 Ticker t;
 
 //Get max value (r,g,b) function
+
+
+
+void get_accel_values(float* data) {
+  MMA8451Q acc(I2C_SDA, I2C_SCL, MMA8451_I2C_ADDRESS);
+    float x;
+    float y;
+    float z;
+        x=acc.getAccX();
+        y=acc.getAccY();
+        z=acc.getAccZ();
+        wait(0.2);
+	float result[3] = {x,y,z};
+  data = result;
+		
+}
 char getMax(int r, int g, int b) {
   char result;
   int max;
@@ -52,10 +72,10 @@ void read_i2c(void){
 		int clear_value = ((int)colour_data[1] << 8) | colour_data[0];
 		int red_value = ((int)colour_data[3] << 8) | colour_data[2];
 		int green_value = ((int)colour_data[5] << 8) | colour_data[4];
-		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];hola
+		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];
 					
 		// print sensor readings
-		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\n\r", clear_value, red_value, green_value, blue_value);
+		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\r\n", clear_value, red_value, green_value, blue_value);
 					
 		//Obtains which one is the greatest - red, green or blue
 		char max = getMax(red_value, green_value, blue_value);
@@ -73,7 +93,11 @@ void read_i2c(void){
 		} else{
 			pc.printf("B\r\n");
 			ledB.write(0);
-			}
+		}
+		
+		get_accel_values(accel_data);
+		pc.printf("X = (%f), Y = (%f), Z = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
+
 		wait(1.0);
 		}
 }
@@ -116,7 +140,7 @@ void initialize_colour_sensor(){
     
     // Turn on the led in the sensor
     ledColour = 1;
-		
+
 }
 void initialize_acc_sensor(){
 	

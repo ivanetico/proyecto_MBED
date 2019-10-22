@@ -25,14 +25,13 @@
 #define REG_OUT_Z_MSB     0x05
 
 #define UINT14_MAX        16383
-Serial pa(USBTX,USBRX,19200);
+//Serial pa(USBTX,USBRX,19200);
 
 
 MMA8451Q::MMA8451Q(PinName sda, PinName scl, int addr) : m_i2c(sda, scl), m_addr(addr) {
     // activate the peripheral
     uint8_t data[2] = {REG_CTRL_REG_1, 0x01};
     writeRegs(data, 2);
-    pa.printf("hello world");
 }
 
 MMA8451Q::~MMA8451Q() { }
@@ -40,7 +39,6 @@ MMA8451Q::~MMA8451Q() { }
 uint8_t MMA8451Q::getWhoAmI() {
     uint8_t who_am_i = 0;
     readRegs(REG_WHO_AM_I, &who_am_i, 1);
-    pa.printf("who am %02x\n\r",who_am_i);
     return who_am_i;
 }
 
