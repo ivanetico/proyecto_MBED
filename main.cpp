@@ -36,23 +36,23 @@ void get_accel_values(float* data) {
         z=acc.getAccZ();
         wait(0.2);
 	float result[3] = {x,y,z};
-  data = result;
+  for (int i=0; i< 3; i++) data[i] = result[i];
 		
 }
-char getMax(int r, int g, int b) {
-  char result;
-  int max;
-  if (r < g){
-    max = g; 
-    result = 'g';  
-  } else {
-    max= r;
-    result = 'r';
+void setLEDColour(unsigned short *CRGB_value) {
+
+	ledR.write(1);
+	ledG.write(1);
+	ledB.write(1);
+	
+  if (CRGB_value[1] > CRGB_value[2] && CRGB_value[1] > CRGB_value[3]){
+		ledR.write(0);
+  }else if(CRGB_value[2] > CRGB_value[1] && CRGB_value[2] > CRGB_value[3]){
+		ledG.write(0);
+  }else if (CRGB_value[3] > CRGB_value[1] && CRGB_value[3] > CRGB_value[2]){
+		ledB.write(0);
   }
-  if (max < b){
-    result = 'b';
-  }
-  return result;
+	//Switchs the color of the greatest value. First, we switch off all of them
 }
 
 void read_i2c(void){
@@ -69,32 +69,18 @@ void read_i2c(void){
 		i2c.read(colour_sensor_addr,colour_data, 8, false);
 					
 		//We store the values read in clear, red, green and blue data
-		int clear_value = ((int)colour_data[1] << 8) | colour_data[0];
-		int red_value = ((int)colour_data[3] << 8) | colour_data[2];
-		int green_value = ((int)colour_data[5] << 8) | colour_data[4];
-		int blue_value = ((int)colour_data[7] << 8) | colour_data[6];
+		unsigned short *CRGB_value = (unsigned short*)(void*)colour_data;
+		//CRGB_value[0] = ((int)colour_data[1] << 8) | colour_data[0];
+		//CRGB_value[1] = ((int)colour_data[3] << 8) | colour_data[2];
+		//CRGB_value[2] = ((int)colour_data[5] << 8) | colour_data[4];
+		//CRGB_value[3] = ((int)colour_data[7] << 8) | colour_data[6];
 					
 		// print sensor readings
-		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\r\n", clear_value, red_value, green_value, blue_value);
+		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\r\n", CRGB_value[0], CRGB_value[1], CRGB_value[2], CRGB_value[3]);
 					
-		//Obtains which one is the greatest - red, green or blue
-		char max = getMax(red_value, green_value, blue_value);
-			
-		//Switchs the color of the greatest value. First, we switch off all of them
-		ledR.write(1);
-		ledG.write(1);
-		ledB.write(1);
-		if (max == 'r'){
-			 ledR.write(0);
-			 pc.printf("R\r\n");
-		} else if(max == 'g'){
-			pc.printf("G\r\n");
-			ledG.write(0);
-		} else{
-			pc.printf("B\r\n");
-			ledB.write(0);
-		}
-		
+		//Sets LED higuer colour
+		setLEDColour(CRGB_value);
+				
 		get_accel_values(accel_data);
 		pc.printf("X = (%f), Y = (%f), Z = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
 
