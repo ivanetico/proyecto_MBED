@@ -1,16 +1,16 @@
 #include "mbed.h"
 #include "MMA8451Q.h"
 
-#define MMA8451_I2C_ADDRESS (0x1d<<1)
+#define MMA8451_I2C_ADDRESS (0x1c<<1)
 
 // Example program connecting the TCS34725 Color Sensor to the B-L072Z-LRWAN1 using I2C
 
 I2C i2c(I2C_SDA, I2C_SCL); //pins for I2C communication (SDA, SCL)
 Serial pc(USBTX, USBRX, 9600); //9600 baudios - used to print some values
-DigitalOut ledColour(PA_10); // TCS34725 led
-DigitalOut ledR(PA_14); //RGB led - red light
+DigitalOut ledColour(PB_7); // TCS34725 led
+DigitalOut ledR(PH_0); //RGB led - red light
 DigitalOut ledG(PH_1);  //RGB led - green light 
-DigitalOut ledB(PA_4);  //RGB led - blue light
+DigitalOut ledB(PB_13);  //RGB led - blue light
 Thread thread_i2c;
 
 // We set the sensor address. For TCS34725 is 0x29 = ‭‭0010 1001‬ (bin) ->> ‭0101 0010‬ (bin) = 0x52
@@ -54,14 +54,29 @@ void setLEDColour(unsigned short *CRGB_value) {
   }
 	//Switchs the color of the greatest value. First, we switch off all of them
 }
+void get_TempHum_values(float* temp, float* hum){
+	char *tx;
+	char rx[2];
+	
+	int tempHumAddres = 0x80;
+	tx[0]=0xE3;
+	
+	i2c.write(tempHumAddres, tx, 1, true);
+	i2c.read(tempHumAddres, rx, 2, false);
+	*temp = (((rx[0]<<8) + rx[1])*175.72/65536.0) - 46.85;
+	
+	tx[0]=0xE5;
+	i2c.write(tempHumAddres, tx, 1, true);
+	i2c.read(tempHumAddres, rx, 2, false);
+	*hum = (((rx[0]<<8) + rx[1])*125.0/65536.0) - 6.0;
+}
 
 void read_i2c(void){
 	while(true){
 		// Read data from color sensor (Clear/Red/Green/Blue)
-		
 		char colour_data[8];
-		float accel_data[3];
-		
+		float accel_data[3];		
+		float temp, hum;
 		
 		char clear_reg[1] = {0xB4}; // {?1011 0100?} -> 0x14 and we set 1st and 3rd bit to 1 for auto-increment
 		//Asking for first register value
@@ -69,17 +84,19 @@ void read_i2c(void){
 		i2c.read(colour_sensor_addr,colour_data, 8, false);
 					
 		//We store the values read in clear, red, green and blue data
-		unsigned short *CRGB_value = (unsigned short*)(void*)colour_data;
-					
-		// print sensor readings
-		pc.printf("Clear (%d)\tRed (%d)\tGreen (%d)\tBlue (%d)\r\n", CRGB_value[0], CRGB_value[1], CRGB_value[2], CRGB_value[3]);
-					
+		unsigned short *CRGB_value = (unsigned short*)(void*)colour_data;					
 		//Sets LED higuer colour
 		setLEDColour(CRGB_value);
 				
 		get_accel_values(accel_data);
-		pc.printf("X = (%f)\tY = (%f)\tZ = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
-
+		
+		
+		// print sensor readings
+		pc.printf("Colour sensor data:\r\nClear (%d)\tRed (%d)\tGreen (%d)\tBlue (%d)\r\n", CRGB_value[0], CRGB_value[1], CRGB_value[2], CRGB_value[3]);
+		pc.printf("Accel data:\r\nX = (%f)\tY = (%f)\tZ = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
+		
+		get_TempHum_values(&temp,&hum);
+		pc.printf("Temp/hum sensor data:\r\n Temp: %.4f\tHum: %.4f\r\n", temp, hum);
 		wait(1.0);
 		}
 }
