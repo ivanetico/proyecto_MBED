@@ -70,19 +70,15 @@ void read_i2c(void){
 					
 		//We store the values read in clear, red, green and blue data
 		unsigned short *CRGB_value = (unsigned short*)(void*)colour_data;
-		//CRGB_value[0] = ((int)colour_data[1] << 8) | colour_data[0];
-		//CRGB_value[1] = ((int)colour_data[3] << 8) | colour_data[2];
-		//CRGB_value[2] = ((int)colour_data[5] << 8) | colour_data[4];
-		//CRGB_value[3] = ((int)colour_data[7] << 8) | colour_data[6];
 					
 		// print sensor readings
-		pc.printf("Clear (%d), Red (%d), Green (%d), Blue (%d)\r\n", CRGB_value[0], CRGB_value[1], CRGB_value[2], CRGB_value[3]);
+		pc.printf("Clear (%d)\tRed (%d)\tGreen (%d)\tBlue (%d)\r\n", CRGB_value[0], CRGB_value[1], CRGB_value[2], CRGB_value[3]);
 					
 		//Sets LED higuer colour
 		setLEDColour(CRGB_value);
 				
 		get_accel_values(accel_data);
-		pc.printf("X = (%f), Y = (%f), Z = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
+		pc.printf("X = (%f)\tY = (%f)\tZ = (%f)\n\r", accel_data[0], accel_data[1], accel_data[2]);
 
 		wait(1.0);
 		}
