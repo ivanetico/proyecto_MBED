@@ -7117,6 +7117,16 @@
               <FileType>5</FileType>
               <FilePath>.\MBed_Adafruit_GPS.h</FilePath>
             </File>
+            <File>
+              <FileName>TCS34725_colour_sensor.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\TCS34725_colour_sensor.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>TCS34725_colour_sensor.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\TCS34725_colour_sensor.h</FilePath>
+            </File>
           </Files>
         </Group>
       </Groups>
