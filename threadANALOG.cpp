@@ -1,20 +1,23 @@
 #include "mbed.h"
-#include "rtos.h"
-
 
 AnalogIn soilmois(PA_0); 
+AnalogIn light(PA_4);
 
-float valueSM=0.0;
+extern int mode;
+extern float valueSM;
+extern float valueLight;
 
-Thread threadANALOG(osPriorityNormal, 512); // 1K stack size
+Thread thread_analog(osPriorityNormal, 512); // 1K stack size
 
-void ANALOG_thread(); 
+void read_analog(void) {
+  while (true) {
 
-void ANALOG_thread() {
-		while (true) {
+    valueSM = soilmois*100;
+    valueLight = light*100;
 
-				Thread::wait(200);
-				valueSM=soilmois*100;
-				  
+    if(mode==0)
+        Thread::wait(1000);
+    else
+       Thread::wait(15000);
     }
 }

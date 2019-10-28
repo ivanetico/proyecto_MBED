@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32L072CZ</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.2.0.1</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>CPUTYPE("Cortex-M0+") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -7126,6 +7126,21 @@
               <FileName>TCS34725_colour_sensor.h</FileName>
               <FileType>5</FileType>
               <FilePath>.\TCS34725_colour_sensor.h</FilePath>
+            </File>
+            <File>
+              <FileName>threadI2C.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadI2C.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>threadANALOG.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadANALOG.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>threadSERIAL.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadSERIAL.cpp</FilePath>
             </File>
           </Files>
         </Group>

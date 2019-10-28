@@ -9,23 +9,23 @@ ColourSensor::ColourSensor(I2C *i2c, DigitalOut *led){
 	mLed = led;
 	initialize_colour_sensor();
 }
-void ColourSensor::getCRGB(unsigned short ** CRGB_values){
+void ColourSensor::getCRGB(uint16_t * CRGB_values){
 		// Read data from color sensor (Clear/Red/Green/Blue)
 		char colour_data[8];
-		unsigned short *CRGB_values_aux;
+		uint16_t *CRGB_values_aux;
 		char clear_reg[1] = {0xB4}; // {?1011 0100?} -> 0x14 and we set 1st and 3rd bit to 1 for auto-increment
 		//Asking for first register value
 		mI2C->write(colour_sensor_addr,clear_reg, 1, true);
 		mI2C->read(colour_sensor_addr,colour_data, 8, false);
 		
-		CRGB_values_aux = (unsigned short*)(void*)colour_data;
-		*CRGB_values = CRGB_values_aux;
+		CRGB_values_aux = (uint16_t*)(void*)colour_data;
+		memcpy(CRGB_values, CRGB_values_aux, sizeof(uint16_t)*4);
 
 }
 void ColourSensor::initialize_colour_sensor(){
 	char id_regval[1] = {0x92}; //?1001 0010? (bin)
   char data[1] = {0}; //?0000 0000?
-	
+	*mLed=1;
 	/**********************************************************************
 	* int write(int address, const char *data, int length, bool repeated) *
 	* int read(int address, char *data, int length, bool repeated)        *
