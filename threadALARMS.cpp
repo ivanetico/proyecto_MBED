@@ -20,44 +20,44 @@ void trigger_alarm(void){
 				switch(i){
 					case temperatureAlarm:
 						something_triggered = true;
-						ledR = 1;
-						ledG = 0;
-						ledB = 0;
+						ledR = 0;
+						ledG = 1;
+						ledB = 1;
 						Thread::wait(400);
 						break;
 					case humidityAlarm:
 						something_triggered = true;
-						ledR = 0;
-						ledG = 0;
-						ledB = 1;
+						ledR = 1;
+						ledG = 1;
+						ledB = 0;
 						Thread::wait(400);
 						break;
 					case ambientLightAlarm:
 						something_triggered = true;
-						ledR = 1;
+						ledR = 0;
+						ledG = 0;
+						ledB = 1;
+						Thread::wait(400);
+						break;
+					case soilmoistureAlarm:
+						something_triggered = true;
+						ledR = 0;
 						ledG = 1;
 						ledB = 0;
 						Thread::wait(400);
 						break;
-					case soilmoistureAlarm:
+					case colourAlarm:
 						something_triggered = true;
 						ledR = 1;
 						ledG = 0;
 						ledB = 1;
 						Thread::wait(400);
 						break;
-					case colourAlarm:
-						something_triggered = true;
-						ledR = 0;
-						ledG = 1;
-						ledB = 0;
-						Thread::wait(400);
-						break;
 					case accelerationAlarm:
 						something_triggered = true;
-						ledR = 0;
-						ledG = 1;
-						ledB = 1;
+						ledR = 1;
+						ledG = 0;
+						ledB = 0;
 						Thread::wait(400);
 						break;		
 					}
