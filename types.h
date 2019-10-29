@@ -1,0 +1,1 @@
+enum alarm_type{temperatureAlarm, humidityAlarm, ambientLightAlarm, soilmoistureAlarm, colourAlarm, accelerationAlarm};

@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32L072CZ</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.2.0.0</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.0.1</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>CPUTYPE("Cortex-M0+") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>
@@ -7093,11 +7093,6 @@
               <FilePath>.\mbed_config.h</FilePath>
             </File>
             <File>
-              <FileName>registers_data.h</FileName>
-              <FileType>5</FileType>
-              <FilePath>.\registers_data.h</FilePath>
-            </File>
-            <File>
               <FileName>MMA8451Q.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\MMA8451Q.cpp</FilePath>
@@ -7141,6 +7136,16 @@
               <FileName>threadSERIAL.cpp</FileName>
               <FileType>8</FileType>
               <FilePath>.\threadSERIAL.cpp</FilePath>
+            </File>
+            <File>
+              <FileName>types.h</FileName>
+              <FileType>5</FileType>
+              <FilePath>.\types.h</FilePath>
+            </File>
+            <File>
+              <FileName>threadALARMS.cpp</FileName>
+              <FileType>8</FileType>
+              <FilePath>.\threadALARMS.cpp</FilePath>
             </File>
           </Files>
         </Group>
