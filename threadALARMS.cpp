@@ -15,7 +15,7 @@ void trigger_alarm(void){
 	
 	while(mode!=0){
 		bool something_triggered = false;
-		for(int i = temperatureAlarm; i<accelerationAlarm; i++){
+		for(int i = temperatureAlarm; i<=accelerationAlarm; i++){
 			if(alarm_triggered[i])
 				switch(i){
 					case temperatureAlarm:

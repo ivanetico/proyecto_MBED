@@ -21,7 +21,7 @@ extern char colour[];
 
 extern int mode;
 extern int time_interval;
-extern int alarm_triggered[];
+extern bool alarm_triggered[];
 Thread thread_i2c(osPriorityNormal, 1024);
 
 void shutDownLed(void){

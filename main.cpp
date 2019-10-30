@@ -161,69 +161,67 @@ void printMean_Max_Min(){
 
 }
 
- int check_num(char *c)
- {
-   int i;
-   long int num;
-   char *read;
-   int check=0;
-   char *c_error=NULL;
-   
-   if(c==NULL){
-     return -1;
-   }
-   read=c;
-   
-   do{
-     for(i=0;i<strlen(read);i++){
-       //check if is a number in ASCII code
-       if (read[i]<48 || read[i]>57){
-				 free(read);
-		pc.printf("\n\tERROR. Only positives numbers.\n");
-		pc.printf("Enter again: ");
-		pc.getc();
-		scanf("%s",read);
-		
-		break;
-		}else if(i==strlen(read)-1){
-			num = strtol(read, &c_error, 10);
-			check=1;
-		}
-	
-     }
-   }while (check==0);
-   
-   free(read);
-   
-   return num;
- }
  void advancedMode(void){
-	 pc.printf("\n\n************INFO: ADVANCED MODE INICIALITED************\n");
+	 pc.printf("\r\n************INFO: ADVANCED MODE INICIALITED************\r\n");
 	 char terminal_1[10];
-   pc.printf("\nPlease enter the number of measures:");
-   pc.getc();
-	 scanf ("%s",terminal_1);
-   numberOfMeasures = check_num(terminal_1);
-	 free(terminal_1);
-	 char terminal_2[10];
-	 pc.printf("\n  \t Please enter the time interval:");
-   pc.getc();
-	 scanf ("%s",terminal_2);
-   numberOfMeasures = check_num(terminal_2);
-	 free(terminal_2);
- }
- 
-extern void shutDownLed(void);
+   
+   pc.printf("Please enter the number of measures (>2): ");
+   int i=0;
+      while(true){
+      char c = pc.getc();
+      if(c == 13){
+       terminal_1[i] =0;
+        break;
+      }
+      if (c<48 || c>57){ //13 = retorno de carro
+      pc.printf("\r\nERROR. Only positives numbers.\r\n");
+      pc.printf("Enter again: ");
+      }else{
+       terminal_1[i] = c;
+        i++;
+        if(i==10) break;
+     }
+      
+   
+  }
+   
+  numberOfMeasures = atoi(terminal_1);
+  pc.printf("\r\nNumber of measures: %d", numberOfMeasures);
 
+  char terminal_2[10];
+   
+  pc.printf("\r\nPlease enter the time interval between reads in seconds (>1s): ");
+  i=0;
+    while(true){
+    char c = pc.getc();
+    if(c == 13){
+     terminal_2[i] =0;
+      break;
+    }
+    if (c<48 || c>57){
+    pc.printf("\r\nERROR. Only positives numbers.\r\n");
+    pc.printf("Enter again: ");
+    }else{
+     terminal_2[i] = c;
+      i++;
+      if(i==10) break;
+   }
+ }
+   
+  time_interval = atoi(terminal_2);
+  pc.printf("\r\nTime interval: %d\r\n", time_interval);
+  if(numberOfMeasures>2 && time_interval>1){
+    pc.printf("Restart board on mode 0\r\n");
+    pc.printf("------------------------------------------------------------\r\n");
+
+    mode = 0;
+  }else
+    pc.printf("Please put valid values (#measures > 2 & T.interval > 1)\r\n");
+}
+ 
 void changeMode(void){
 	mode += 1;
 	mode %= 3;
-	/*if(mode == 1)
-		thread_alarms.start(trigger_alarm);
-	else if(mode == 0)
-		if(thread_alarms.get_state()== Thread::Running)
-			thread_alarms.join();*/
-  //shutDownLed();
 }
 
 int main() {
@@ -238,18 +236,22 @@ while (true) {
   switch (mode){
     case 0:
 			if(thread_alarms.get_state()== Thread::Running)
-			thread_alarms.join();
+        
+        thread_alarms.join();
       green1 = 1;
       green2 = 0;
       wait(2);
+      pc.printf("Mode %d (0 = test, 1 = normal, 2 = advanced)\r\n", mode);
+
       printAll();
       break;
     case 1:
 			if(thread_alarms.get_state()!= Thread::Running)
-			thread_alarms.start(trigger_alarm);
+        thread_alarms.start(trigger_alarm);
       green1 = 0;
       green2 = 1;
       wait(time_interval);
+      pc.printf("Mode %d (0 = test, 1 = normal, 2 = advanced)\r\n", mode);
       printAll();
       if (saveData()==numberOfMeasures)
         printMean_Max_Min();
@@ -257,13 +259,12 @@ while (true) {
 		case 2:
 			green1 = 1;
 			green1 = 1;
-			//advancedMode();
-			wait(time_interval);
-			//printAll();
-			
+			advancedMode();
+			wait(1);
 			break;
+    
     default:
-      printAll();
+      wait(2);
       break;
   }
 }

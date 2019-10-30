@@ -7,7 +7,7 @@ extern int time_interval;
 extern int mode;
 extern float valueSM;
 extern float valueLight;
-extern int alarm_triggered[];
+extern bool alarm_triggered[];
 
 Thread thread_analog(osPriorityNormal, 512); // 1K stack size
 
@@ -15,7 +15,7 @@ void read_analog(void) {
   while (true) {
 
     valueSM = soilmois*100;
-	if(soilmois > 60.0)
+	if(valueSM > 60.0)
 		alarm_triggered[soilmoistureAlarm] = true;
 	else
 		alarm_triggered[soilmoistureAlarm] = false;
