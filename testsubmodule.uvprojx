@@ -16,7 +16,7 @@
         <TargetCommonOption>
           <Device>STM32L072CZ</Device>
           <Vendor>STMicroelectronics</Vendor>
-          <PackID>Keil.STM32L0xx_DFP.2.0.1</PackID>
+          <PackID>Keil.STM32L0xx_DFP.2.0.0</PackID>
           <PackURL>http://www.keil.com/pack/</PackURL>
           <Cpu>CPUTYPE("Cortex-M0+") </Cpu>
           <FlashUtilSpec></FlashUtilSpec>

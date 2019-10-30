@@ -1,6 +1,8 @@
 #include "mbed.h"
 #include "MBed_Adafruit_GPS.h"
 
+
+
 #define MAX(x, y) (((x) > (y)) ? (x) : (y))
 #define MIN(x, y) (((x) < (y)) ? (x) : (y))
 #define UTC_DIFF 1
@@ -13,8 +15,8 @@ InterruptIn pushbutton(USER_BUTTON);
 DigitalOut green1(LED1); //LED of B-L072Z-LRWAN1 board
 DigitalOut green2(LED2);
 
-int numberOfMeasures = 10;
-int time_interval = 2;
+long int numberOfMeasures = 10;
+long int time_interval = 2;
 int mode = 0;
 
 float valueSM=0.0;
@@ -159,11 +161,68 @@ void printMean_Max_Min(){
 
 }
 
+ int check_num(char *c)
+ {
+   int i;
+   long int num;
+   char *read;
+   int check=0;
+   char *c_error=NULL;
+   
+   if(c==NULL){
+     return -1;
+   }
+   read=c;
+   
+   do{
+     for(i=0;i<strlen(read);i++){
+       //check if is a number in ASCII code
+       if (read[i]<48 || read[i]>57){
+				 free(read);
+		pc.printf("\n\tERROR. Only positives numbers.\n");
+		pc.printf("Enter again: ");
+		pc.getc();
+		scanf("%s",read);
+		
+		break;
+		}else if(i==strlen(read)-1){
+			num = strtol(read, &c_error, 10);
+			check=1;
+		}
+	
+     }
+   }while (check==0);
+   
+   free(read);
+   
+   return num;
+ }
+ void advancedMode(void){
+	 pc.printf("\n\n************INFO: ADVANCED MODE INICIALITED************\n");
+	 char terminal_1[10];
+   pc.printf("\nPlease enter the number of measures:");
+   pc.getc();
+	 scanf ("%s",terminal_1);
+   numberOfMeasures = check_num(terminal_1);
+	 free(terminal_1);
+	 char terminal_2[10];
+	 pc.printf("\n  \t Please enter the time interval:");
+   pc.getc();
+	 scanf ("%s",terminal_2);
+   numberOfMeasures = check_num(terminal_2);
+	 free(terminal_2);
+ }
+ 
 extern void shutDownLed(void);
 
 void changeMode(void){
 	mode += 1;
-	mode %= 2;
+	mode %= 3;
+	/*if(mode == 1)
+		thread_alarms.start(trigger_alarm);
+	else if(mode == 0)
+		if(thread_alarms.get_state()== Thread::Running)
+			thread_alarms.join();*/
   //shutDownLed();
 }
 
@@ -178,15 +237,15 @@ int main() {
 while (true) {
   switch (mode){
     case 0:
-			//thread_alarms.join();
-		if (thread_alarms.get_state() == 1)
-			thread_alarms.terminate();
+			if(thread_alarms.get_state()== Thread::Running)
+			thread_alarms.join();
       green1 = 1;
       green2 = 0;
       wait(2);
       printAll();
       break;
     case 1:
+			if(thread_alarms.get_state()!= Thread::Running)
 			thread_alarms.start(trigger_alarm);
       green1 = 0;
       green2 = 1;
@@ -195,6 +254,14 @@ while (true) {
       if (saveData()==numberOfMeasures)
         printMean_Max_Min();
       break;
+		case 2:
+			green1 = 1;
+			green1 = 1;
+			//advancedMode();
+			wait(time_interval);
+			//printAll();
+			
+			break;
     default:
       printAll();
       break;

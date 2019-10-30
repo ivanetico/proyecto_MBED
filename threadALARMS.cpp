@@ -13,7 +13,7 @@ bool alarm_triggered[6];
 void trigger_alarm(void){
 	memset(alarm_triggered, 0, sizeof(alarm_triggered));
 	
-	while(true){
+	while(mode!=0){
 		bool something_triggered = false;
 		for(int i = temperatureAlarm; i<accelerationAlarm; i++){
 			if(alarm_triggered[i])
